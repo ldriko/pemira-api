@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('mission')->nullable();
             $table->string('picture')->nullable();
             $table->string('created_by');
+            $table->foreign('created_by')->references('npm')->on('users');
             $table->timestamps();
         });
     }

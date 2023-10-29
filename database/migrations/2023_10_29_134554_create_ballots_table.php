@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('event_id');
             $table->foreign('event_id')->references('id')->on('events');
             $table->string('npm');
+            $table->foreign('npm')->references('npm')->on('users');
             $table->string('ktm_picture');
             $table->string('verification_picture');
             $table->unsignedBigInteger('candidate1');
