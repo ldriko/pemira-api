@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('event_id');
             $table->foreign('event_id')->references('id')->on('events');
-            $table->unsignedBigInteger('division_type_id');
-            $table->foreign('division_type_id')->references('id')->on('divisions');
+            $table->unsignedBigInteger('division_id');
+            $table->foreign('division_id')->references('id')->on('divisions');
             $table->string('first');
             $table->string('second')->nullable();
             $table->text('vision')->nullable();
