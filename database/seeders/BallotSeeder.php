@@ -19,11 +19,11 @@ class BallotSeeder extends Seeder
             'event_id' => 1,
             'ktm_picture' => "ktm.png",
             'verification_picture' => "verification.png",
-            'candidate1' => 1,
-            'candidate2' => 2,
-            'candidate3' => 3,
-            'candidate4' => 4,
-            'accepted'   => 1,
+            // 'candidate1' => 1,
+            // 'candidate2' => 2,
+            // 'candidate3' => 3,
+            // 'candidate4' => 4,
+            // 'accepted'   => 1,
             'accepted_by'   => "22081010158",
         ]);
 
@@ -33,11 +33,11 @@ class BallotSeeder extends Seeder
             'event_id' => 1,
             'ktm_picture' => "ktm2.png",
             'verification_picture' => "verification2.png",
-            'candidate1' => 5,
-            'candidate2' => 6,
-            'candidate3' => 7,
-            'candidate4' => 8,
-            'accepted'   => 0,
+            // 'candidate1' => 5,
+            // 'candidate2' => 6,
+            // 'candidate3' => 7,
+            // 'candidate4' => 8,
+            // 'accepted'   => 0,
             'accepted_by'   => "22081010158",
         ]);
     }

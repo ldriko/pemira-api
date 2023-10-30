@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             DivisionSeeder::class,
             CandidateSeeder::class,
             BallotSeeder::class,
+            BallotDetailSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
 
