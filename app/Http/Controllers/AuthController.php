@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Laravel\Socialite\Facades\Socialite;
@@ -20,17 +21,26 @@ class AuthController extends Controller
 
     $providerUser = Socialite::driver('google')->userFromToken($token);
 
-    return response()->json($providerUser);
 
-    // $user = User::where('provider_id', $providerUser->id)->first();
+    $user = User::where('provider_id', $providerUser->id)->first();
 
-    // if($user == null){
-    //     $user = User::create([
-    //         'provider_id' => $providerUser->id,
-    //     ]);
-    // }
+    if($user == null){
+        $user = User::create([
+            'provider_id' => $providerUser->getId(),
+            'name' => $providerUser->name,
+            'email' => $providerUser->email,
+            'npm' => strtok($providerUser->email, '@'),
+            'role' => 2,
+            'picture' => $providerUser->avatar
+        ]);
+    }
 
-    // // create a token for the user, so they can login
+    $login = $user->createToken('login')->plainTextToken;
+    return response()->json([
+        'user' => $providerUser,
+        'login_token' => $login,
+    ]);
+    // create a token for the user, so they can login
     // $token = $user->createToken(env('APP_NAME'))->accessToken;
 
     // // return the token for usage

@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\WhiteListController;
 use App\Models\Division;
+use GuzzleHttp\Middleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +25,7 @@ use App\Models\Division;
 Route::get('/users', [UserController::class, 'store']);
 
 
-Route::prefix('event')->group(function () {
+Route::prefix('event')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/show', [EventController::class, 'show']);
     Route::post('/store', [EventController::class, 'store']);
     Route::put('/openElection/{id}', [EventController::class, 'OpenElection']);
@@ -32,22 +33,22 @@ Route::prefix('event')->group(function () {
     Route::delete('/delete/{id}', [EventController::class, 'deleteEvent']);
 });
 
-Route::prefix('division')->group(function () {
+Route::prefix('division')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/{id}/event/show', [DivisionController::class, 'show']);
     Route::post('/{id}/event/store', [DivisionController::class, 'store']);
     Route::delete('/delete/{id}', [DivisionController::class, 'delete']);
 });
 
-Route::prefix('whitelist')->group(function () {
+Route::prefix('whitelist')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/{id}/event/show', [WhiteListController::class, 'show']);
     Route::post('/{id}/event/store', [WhitelistController::class, 'store']);
-    Route::delete('/delete/{id}', [whitelistController::class, 'delete']);
+    Route::delete('/delete/{id}', [WhitelistController::class, 'delete']);
 });
 
-Route::prefix('ballot')->group(function () {
+Route::prefix('ballot')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/{id}/event/show', [BallotController::class, 'show']);
     Route::post('/submisson/usernpm/{npm}/event/{id}', [BallotController::class, 'store']);
-    Route::delete('/delete/{id}', [whitelistController::class, 'delete']);
+    Route::delete('/delete/{id}', [BallotController::class, 'delete']);
 });
 
 Route::prefix('auth')->group(function () {

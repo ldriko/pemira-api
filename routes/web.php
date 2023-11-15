@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/auth/login', [AuthController::class, 'loginTest']);
-Route::get('/auth/callback', [AuthController::class, 'callback']);
+// Route::get('/auth/login', [AuthController::class, 'loginTest']);
+// Route::get('/auth/callback', [AuthController::class, 'callback']);
