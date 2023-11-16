@@ -6,51 +6,39 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
 
 class AuthController extends Controller
 {
     public function login(Request $request)
-{
-    $token = $request->input('access_token');
+    {
+        $request->validate(['accessToken' => 'required']);
 
-    if (!$token) {
-        return response()->json(['error' => 'Access token is missing'], 400);
-    }
+        $providerUser = Socialite::driver('google')->userFromToken($request->accessToken);
 
-    $providerUser = Socialite::driver('google')->userFromToken($token);
+        [$username, $domain] = explode('@', $providerUser->email);
 
+        if (strpos($domain, 'student.upnjatim.ac.id') === false)
+            return response()->json(['message' => 'Gunakan akun google UPN!'], 401);
+        else if (substr($username, 2, 2) !== '08')
+            return response()->json(['message' => 'Akun google tersebut tidak terdaftar sebagai mahasiswa Informatika'], 401);
 
-    $user = User::where('provider_id', $providerUser->id)->first();
-
-    if($user == null){
-        $user = User::create([
+        $user = User::query()->firstOrCreate([
             'provider_id' => $providerUser->getId(),
+        ], [
             'name' => $providerUser->name,
             'email' => $providerUser->email,
             'npm' => strtok($providerUser->email, '@'),
             'role' => 2,
             'picture' => $providerUser->avatar
         ]);
+
+        Auth::login($user);
+
+        return $user;
     }
-
-    $login = $user->createToken('login')->plainTextToken;
-    return response()->json([
-        'user' => $providerUser,
-        'login_token' => $login,
-    ]);
-    // create a token for the user, so they can login
-    // $token = $user->createToken(env('APP_NAME'))->accessToken;
-
-    // // return the token for usage
-    // return response()->json([
-    //     'success' => true,
-    //     'token' => $token
-    // ]);
-}
-
-    
 
     public function Callback()
     {

@@ -52,11 +52,6 @@ Route::prefix('ballot')->middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::prefix('auth')->group(function () {
-    Route::get('/login', [AuthController::class, 'login']);
+    Route::post('/login', [AuthController::class, 'login']);
     Route::get('/callback', [AuthController::class, 'callback']);
 });
-
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
