@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventOrganizerController;
 use App\Http\Controllers\WhiteListController;
 use App\Models\Division;
 use GuzzleHttp\Middleware;
@@ -31,6 +32,17 @@ Route::prefix('event')->middleware(['auth:sanctum'])->group(function () {
     Route::put('/openElection/{id}', [EventController::class, 'OpenElection']);
     Route::put('/closeElection/{id}', [EventController::class, 'CloseElection']);
     Route::delete('/delete/{id}', [EventController::class, 'deleteEvent']);
+});
+
+Route::prefix('events')->name('events.')->group(function () {
+    Route::prefix('{event}')->name('event.')->group(function () {
+        Route::prefix('organizers')->name('organizers.')->middleware('auth:sanctum')->group(function () {
+            Route::get('/index', [EventOrganizerController::class, 'index']);
+            Route::get('{organizer}/show', [EventOrganizerController::class, 'show']);
+            Route::post('/store', [EventOrganizerController::class, 'store']);
+            Route::delete('{organizer}/destroy', [EventOrganizerController::class, 'destroy']);
+        });
+    });
 });
 
 Route::prefix('division')->middleware(['auth:sanctum'])->group(function () {

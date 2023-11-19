@@ -40,14 +40,7 @@ class AuthController extends Controller
         'user' => $providerUser,
         'login_token' => $login,
     ]);
-    // create a token for the user, so they can login
-    // $token = $user->createToken(env('APP_NAME'))->accessToken;
-
-    // // return the token for usage
-    // return response()->json([
-    //     'success' => true,
-    //     'token' => $token
-    // ]);
+    
 }
 
     
