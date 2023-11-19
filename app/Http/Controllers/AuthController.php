@@ -34,7 +34,13 @@ class AuthController extends Controller
             'role' => 2,
             'picture' => $providerUser->avatar
         ]);
-
+        if ($request->token == 1) {
+            $login = $user->createToken('login')->plainTextToken;
+            return [
+                'user' => $providerUser,
+                'login_token' => $login,
+            ];
+        }
         Auth::login($user);
 
         return $user;
