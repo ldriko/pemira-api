@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    public function show()
+    public function index()
     {
         $event = Event::all();
         return response()->json($event);
@@ -30,45 +30,51 @@ class EventController extends Controller
         return response()->json(['message' => 'Event created successfully']);
     }
 
-    public function OpenElection(Request $request, $id)
+    public function show($event)
     {
-        $request->validate([
-            'open_election_at' => 'required|date',
-        ]);
+        $candidate = Event::where('id', $event)->get();
+        return response()->json($candidate);
+    }
 
-        $event = Event::find($id);
+    public function OpenElection(Request $request, $event)
+    {
+        // $request->validate([
+        //     'open_election_at' => 'required|date',
+        // ]);
 
-        if (!$event) {
+        $events = Event::find($event);
+
+        if (!$events) {
             return response()->json(['message' => 'Event not found'], 404);
         }
 
-        $event->open_election_at = $request->input('open_election_at');
-        $event->save();
+        $events->open_election_at = now();
+        $events->save();
 
         return response()->json(['message' => 'Event open date has set successfully']);
     }
 
-    public function CloseElection(Request $request, $id)
+    public function CloseElection(Request $request, $event)
     {
-        $request->validate([
-            'close_election_at' => 'required|date',
-        ]);
+        // $request->validate([
+        //     'close_election_at' => 'required|date',
+        // ]);
 
-        $event = Event::find($id);
+        $events = Event::find($event);
 
-        if (!$event) {
+        if (!$events) {
             return response()->json(['message' => 'Event not found'], 404);
         }
 
-        $event->close_election_at = $request->input('close_election_at');
-        $event->save();
+        $events->close_election_at = now();
+        $events->save();
 
         return response()->json(['message' => 'Event close date has set successfully']);
     }
 
-    public function deleteEvent($id)
+    public function deleteEvent($event)
     {
-        $event = Event::find($id);
+        $event = Event::find($event);
 
         if (!$event) {
             return response()->json(['message' => 'Event not found'], 404);

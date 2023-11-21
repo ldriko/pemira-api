@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BallotController;
+use App\Http\Controllers\candidatesController;
 use App\Http\Controllers\DivisionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -9,6 +10,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventOrganizerController;
 use App\Http\Controllers\WhiteListController;
+use App\Models\Candidate;
 use App\Models\Division;
 use GuzzleHttp\Middleware;
 
@@ -26,12 +28,14 @@ use GuzzleHttp\Middleware;
 Route::get('/users', [UserController::class, 'store']);
 
 
-Route::prefix('event')->middleware(['auth:sanctum'])->group(function () {
-    Route::get('/show', [EventController::class, 'show']);
-    Route::post('/store', [EventController::class, 'store']);
-    Route::put('/openElection/{id}', [EventController::class, 'OpenElection']);
-    Route::put('/closeElection/{id}', [EventController::class, 'CloseElection']);
-    Route::delete('/delete/{id}', [EventController::class, 'deleteEvent']);
+
+Route::prefix('events')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/', [EventController::class, 'index']);
+    Route::post('/', [EventController::class, 'store']);
+    Route::get('/{event}', [EventController::class, 'show']);
+    Route::post('/{event}/open', [EventController::class, 'OpenElection']);
+    Route::post('/{event}/close', [EventController::class, 'CloseElection']);
+    Route::delete('/{event}', [EventController::class, 'deleteEvent']);
 });
 
 Route::prefix('events')->name('events.')->group(function () {
@@ -55,24 +59,43 @@ Route::prefix('events')->name('events.')->group(function () {
     });
 });
 
-Route::prefix('division')->middleware(['auth:sanctum'])->group(function () {
-    Route::get('/{id}/event/show', [DivisionController::class, 'show']);
-    Route::post('/{id}/event/store', [DivisionController::class, 'store']);
-    Route::delete('/delete/{id}', [DivisionController::class, 'delete']);
+Route::prefix('events')->name('events.')->group(function () {
+    Route::prefix('{event}')->name('event.')->group(function () {
+        Route::prefix('divisions')->name('divisions.')->middleware('auth:sanctum')->group(function () {
+            Route::get('/', [DivisionController::class, 'index']);
+            Route::get('{id}', [DivisionController::class, 'show']);
+            Route::post('/', [DivisionController::class, 'store']);
+            Route::delete('{id}', [DivisionController::class, 'destroy']);
+        });
+    });
 });
 
+
 // Route::prefix('whitelist')->middleware(['auth:sanctum'])->group(function () {
-//     Route::get('/{id}/event/show', [WhiteListController::class, 'show']);
 //     Route::get('/{id}/event/show', [WhiteListController::class, 'show']);
 //     Route::post('/{id}/event/store', [WhitelistController::class, 'store']);
 //     Route::delete('/delete/{id}', [WhitelistController::class, 'delete']);
 // });
+
+Route::prefix('events')->name('events.')->group(function () {
+    Route::prefix('{event}')->name('event.')->group(function () {
+        Route::prefix('candidates')->name('candidates.')->middleware('auth:sanctum')->group(function () {
+            Route::get('/', [candidatesController::class, 'index']);
+            Route::get('{candidate}', [candidatesController::class, 'show']);
+            Route::post('/', [candidatesController::class, 'store']);
+            Route::put('{candidate}', [candidatesController::class, 'store']);
+            Route::delete('{candidate}', [candidatesController::class, 'destroy']);
+        });
+    });
+});
 
 // Route::prefix('ballot')->middleware(['auth:sanctum'])->group(function () {
 //     Route::get('/{id}/event/show', [BallotController::class, 'show']);
 //     Route::post('/submisson/usernpm/{npm}/event/{id}', [BallotController::class, 'store']);
 //     Route::delete('/delete/{id}', [BallotController::class, 'delete']);
 // });
+
+
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);

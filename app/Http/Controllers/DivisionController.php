@@ -3,14 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Division;
+use App\Models\Candidate;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class DivisionController extends Controller
 {
-    public function show($id)
+    public function index($id)
     {
         $divisions = Division::where('event_id', $id)->get();
         return response()->json($divisions);
+    }
+
+    public function show($event)
+    {
+        $division = Division::where('id', $event)->get();
+        return response()->json($division);
     }
 
     public function store(Request $request, $id)
@@ -28,15 +36,20 @@ class DivisionController extends Controller
     }
     
     public function delete($id)
-    {
-        $event = Division::find($id);
+{
+    $division = Division::find($id);
+    $candidates = Candidate::where('division_id', $id)->get();
 
-        if (!$event) {
-            return response()->json(['message' => 'Division not found'], 404);
-        }
-
-        $event->delete();
-
-        return response()->json(['message' => 'Division deleted successfully']);
+    if (!$division) {
+        return response()->json(['message' => 'Division not found'], 404);
     }
+
+    if ($candidates->count() > 0) {
+        return response()->json(['message' => 'Cannot delete division. Division is associated with candidates.'], 400);
+    }
+
+    $division->delete();
+
+    return response()->json(['message' => 'Division deleted successfully']);
+}
 }
