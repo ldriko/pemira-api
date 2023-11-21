@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('title');
             $table->string('description');
             $table->string('logo');
-            $table->timestamp('open_election_at');
-            $table->timestamp('close_election_at');
+            $table->timestamp('open_election_at')->nullable();
+            $table->timestamp('close_election_at')->nullable();
             $table->timestamps();
         });
     }

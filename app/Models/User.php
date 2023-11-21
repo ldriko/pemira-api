@@ -21,6 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'picture',
+        'npm',
+        'role',
+        'provider_id'
     ];
 
     /**
@@ -42,4 +46,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    protected $primaryKey = 'npm';
+
+    public $incrementing = false;
 }

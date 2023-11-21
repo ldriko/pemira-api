@@ -2,81 +2,80 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function show()
     {
-        //
+        $event = Event::all();
+        return response()->json($event);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
-        // $request = request();
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required',
+            'logo' => 'required|string|min:6',
+        ]);
 
-        // Get the raw data from the request
-        // $raw_data = $request->raw();
-        // $raw_data = $request->all();
-        // $request = request()->all();
-        // dd($request->input());
+        $event = new Event();
+        $event->title = $request->input('title');
+        $event->description = $request->input('description');
+        $event->logo = $request->input('logo');
+        $event->save(); 
 
-        // Return the raw data
-        // return response()->json($request);
-        // dd($request);
-        // return response()->json($request);
-        // return response()->json([
-        //     'status' => '1',
-        //     'data' => [
-        //         'ok'
-        //     ]
-        // ]);
+        return response()->json(['message' => 'Event created successfully']);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function OpenElection(Request $request, $id)
     {
-        //
+        $request->validate([
+            'open_election_at' => 'required|date',
+        ]);
+
+        $event = Event::find($id);
+
+        if (!$event) {
+            return response()->json(['message' => 'Event not found'], 404);
+        }
+
+        $event->open_election_at = $request->input('open_election_at');
+        $event->save();
+
+        return response()->json(['message' => 'Event open date has set successfully']);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function CloseElection(Request $request, $id)
     {
-        //
+        $request->validate([
+            'close_election_at' => 'required|date',
+        ]);
+
+        $event = Event::find($id);
+
+        if (!$event) {
+            return response()->json(['message' => 'Event not found'], 404);
+        }
+
+        $event->close_election_at = $request->input('close_election_at');
+        $event->save();
+
+        return response()->json(['message' => 'Event close date has set successfully']);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function deleteEvent($id)
     {
-        //
-    }
+        $event = Event::find($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        if (!$event) {
+            return response()->json(['message' => 'Event not found'], 404);
+        }
+
+        $event->delete();
+
+        return response()->json(['message' => 'Event deleted successfully']);
     }
 }
