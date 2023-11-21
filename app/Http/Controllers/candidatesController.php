@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Candidate;
 use Illuminate\Http\Request;
 
-class candidatesController extends Controller
+class CandidatesController extends Controller
 {
     public function index($id)
     {

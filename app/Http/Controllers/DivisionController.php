@@ -34,22 +34,22 @@ class DivisionController extends Controller
 
         return response()->json(['message' => 'Division created successfully']);
     }
-    
+
     public function delete($id)
-{
-    $division = Division::find($id);
-    $candidates = Candidate::where('division_id', $id)->get();
+    {
+        $division = Division::find($id);
+        $candidates = Candidate::where('division_id', $id)->get();
 
-    if (!$division) {
-        return response()->json(['message' => 'Division not found'], 404);
+        if (!$division) {
+            return response()->json(['message' => 'Division not found'], 404);
+        }
+
+        if ($candidates->count() > 0) {
+            return response()->json(['message' => 'Cannot delete division. Division is associated with candidates.'], 409);
+        }
+
+        $division->delete();
+
+        return response()->json(['message' => 'Division deleted successfully']);
     }
-
-    if ($candidates->count() > 0) {
-        return response()->json(['message' => 'Cannot delete division. Division is associated with candidates.'], 400);
-    }
-
-    $division->delete();
-
-    return response()->json(['message' => 'Division deleted successfully']);
-}
 }

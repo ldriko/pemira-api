@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BallotController;
-use App\Http\Controllers\candidatesController;
+use App\Http\Controllers\CandidatesController;
 use App\Http\Controllers\DivisionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -52,9 +52,11 @@ Route::prefix('events')->name('events.')->group(function () {
             Route::post('', [WhiteListController::class, 'store']);
         });
 
-        Route::prefix('ballots')->name('ballots.')->group(function () {
+        Route::prefix('ballots')->name('ballots.')->middleware(['auth:sanctum'])->group(function () {
             Route::get('', [BallotController::class, 'index']);
             Route::post('', [BallotController::class, 'store']);
+            Route::get('/{ballot}/accept', [BallotController::class, 'accept']);
+            Route::get('/{ballot}/reject', [BallotController::class, 'reject']);
         });
     });
 });
@@ -80,11 +82,11 @@ Route::prefix('events')->name('events.')->group(function () {
 Route::prefix('events')->name('events.')->group(function () {
     Route::prefix('{event}')->name('event.')->group(function () {
         Route::prefix('candidates')->name('candidates.')->middleware('auth:sanctum')->group(function () {
-            Route::get('/', [candidatesController::class, 'index']);
-            Route::get('{candidate}', [candidatesController::class, 'show']);
-            Route::post('/', [candidatesController::class, 'store']);
-            Route::put('{candidate}', [candidatesController::class, 'store']);
-            Route::delete('{candidate}', [candidatesController::class, 'destroy']);
+            Route::get('/', [CandidatesController::class, 'index']);
+            Route::get('{candidate}', [CandidatesController::class, 'show']);
+            Route::post('/', [CandidatesController::class, 'store']);
+            Route::put('{candidate}', [CandidatesController::class, 'store']);
+            Route::delete('{candidate}', [CandidatesController::class, 'destroy']);
         });
     });
 });
