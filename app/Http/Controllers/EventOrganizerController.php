@@ -9,14 +9,14 @@ class EventOrganizerController extends Controller
 {
     public function index($event)
     {
-        $eo = EventOrganizer::where('event_id', $event)->get();
-        return response()->json($eo);
+        $event = EventOrganizer::where('event_id', $event)->get();
+        return response()->json($event);
     }
 
     public function show($event, $organizer)
     {
-        $eo = EventOrganizer::where('event_id', $event)->where('id', $organizer)->get();
-        return response()->json($eo);
+        $event = EventOrganizer::where('event_id', $event)->where('id', $organizer)->get();
+        return response()->json($event);
     }
 
     public function store(Request $request, $event)
