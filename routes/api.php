@@ -42,6 +42,16 @@ Route::prefix('events')->name('events.')->group(function () {
             Route::post('/store', [EventOrganizerController::class, 'store']);
             Route::delete('{organizer}/destroy', [EventOrganizerController::class, 'destroy']);
         });
+
+        Route::prefix('whitelists')->name('whitelists.')->middleware(['auth:sanctum'])->group(function () {
+            Route::get('', [WhiteListController::class, 'index']);
+            Route::post('', [WhiteListController::class, 'store']);
+        });
+
+        Route::prefix('ballots')->name('ballots.')->group(function () {
+            Route::get('', [BallotController::class, 'index']);
+            Route::post('', [BallotController::class, 'store']);
+        });
     });
 });
 
@@ -51,17 +61,18 @@ Route::prefix('division')->middleware(['auth:sanctum'])->group(function () {
     Route::delete('/delete/{id}', [DivisionController::class, 'delete']);
 });
 
-Route::prefix('whitelist')->middleware(['auth:sanctum'])->group(function () {
-    Route::get('/{id}/event/show', [WhiteListController::class, 'show']);
-    Route::post('/{id}/event/store', [WhitelistController::class, 'store']);
-    Route::delete('/delete/{id}', [WhitelistController::class, 'delete']);
-});
+// Route::prefix('whitelist')->middleware(['auth:sanctum'])->group(function () {
+//     Route::get('/{id}/event/show', [WhiteListController::class, 'show']);
+//     Route::get('/{id}/event/show', [WhiteListController::class, 'show']);
+//     Route::post('/{id}/event/store', [WhitelistController::class, 'store']);
+//     Route::delete('/delete/{id}', [WhitelistController::class, 'delete']);
+// });
 
-Route::prefix('ballot')->middleware(['auth:sanctum'])->group(function () {
-    Route::get('/{id}/event/show', [BallotController::class, 'show']);
-    Route::post('/submisson/usernpm/{npm}/event/{id}', [BallotController::class, 'store']);
-    Route::delete('/delete/{id}', [BallotController::class, 'delete']);
-});
+// Route::prefix('ballot')->middleware(['auth:sanctum'])->group(function () {
+//     Route::get('/{id}/event/show', [BallotController::class, 'show']);
+//     Route::post('/submisson/usernpm/{npm}/event/{id}', [BallotController::class, 'store']);
+//     Route::delete('/delete/{id}', [BallotController::class, 'delete']);
+// });
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);

@@ -7,17 +7,14 @@ use Illuminate\Http\Request;
 
 class BallotController extends Controller
 {
-    public function show($id)
+    public function index($event)
     {
-        $divisions = Ballot::where('event_id', $id)->get();
-        return response()->json($divisions);
+        $ballots = Ballot::where('event_id', $event)->get();
+        return response()->json($ballots);
     }
 
-    public function store(Request $request,$npm, $id)
+    public function store(Request $request, $event)
     {
-        // $request->validate([
-        //     'name' => 'required|string|max:255',
-        // ]);
 
         $ballot = new Ballot();
         $ballot->event_id = $id;
