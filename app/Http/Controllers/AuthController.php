@@ -14,7 +14,19 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $request->validate(['accessToken' => 'required']);
+        $request->validate([
+            'accessToken' => 'required_without:email',
+            'email' => 'sometimes|email',
+            'password' => 'required_with:email',
+        ]);
+
+        if ($request->email) {
+            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                return Auth::user();
+            } else {
+                return response()->json(['message' => 'Email atau password tidak sesuai'], 401);
+            }
+        }
 
         $providerUser = Socialite::driver('google')->userFromToken($request->accessToken);
 
