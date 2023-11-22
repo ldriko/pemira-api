@@ -42,10 +42,11 @@ Route::prefix('events')->middleware(['auth:sanctum'])->group(function () {
 Route::prefix('events')->name('events.')->group(function () {
     Route::prefix('{event}')->name('event.')->group(function () {
         Route::prefix('organizers')->name('organizers.')->middleware('auth:sanctum')->group(function () {
-            Route::get('/index', [EventOrganizerController::class, 'index']);
-            Route::get('{organizer}/show', [EventOrganizerController::class, 'show']);
-            Route::post('/store', [EventOrganizerController::class, 'store']);
-            Route::delete('{organizer}/destroy', [EventOrganizerController::class, 'destroy']);
+            Route::get('/', [EventOrganizerController::class, 'index']);
+            Route::get('{organizer}', [EventOrganizerController::class, 'show']);
+            Route::post('/', [EventOrganizerController::class, 'store']);
+            Route::delete('{organizer}', [EventOrganizerController::class, 'destroy']);
+            Route::put('{organizer}', [EventOrganizerController::class, 'update']);
         });
 
         Route::prefix('whitelists')->name('whitelists.')->middleware(['auth:sanctum'])->group(function () {

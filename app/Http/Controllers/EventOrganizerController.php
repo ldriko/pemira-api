@@ -9,14 +9,24 @@ class EventOrganizerController extends Controller
 {
     public function index($event)
     {
-        $event = EventOrganizer::where('event_id', $event)->get();
-        return response()->json($event);
+        $eo = EventOrganizer::where('event_id', $event)->get();
+
+        if ($eo->isEmpty()) {
+            return response()->json(['message' => 'Event organizers not found'], 404);
+        }
+
+        return response()->json($eo);
     }
 
     public function show($event, $organizer)
     {
-        $event = EventOrganizer::where('event_id', $event)->where('id', $organizer)->get();
-        return response()->json($event);
+        $eo = EventOrganizer::where('event_id', $event)->where('id', $organizer)->get();
+
+        if ($eo->isEmpty()) {
+            return response()->json(['message' => 'Event organizers not found'], 404);
+        }
+
+        return response()->json($eo);
     }
 
     public function store(Request $request, $event)
@@ -33,6 +43,28 @@ class EventOrganizerController extends Controller
         $eo->save(); 
 
         return response()->json(['message' => 'Event Organizer created successfully']);
+    }
+
+    public function update(Request $request,$event, $id)
+    {
+        $request->validate([
+            'npm' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+        ]);
+
+        $eo = EventOrganizer::where('event_id', $event)->where('id', $id)->first();
+
+        if (!$eo) {
+            return response()->json(['message' => 'Event Organizer not found'], 404);
+        }
+
+
+        $eo->update([
+            'npm' => $request->input('npm'),
+            'description' => $request->input('description'),
+        ]);
+
+        return response()->json(['message' => 'Event Organizer updated successfully']);
     }
 
     public function destroy($event, $id)

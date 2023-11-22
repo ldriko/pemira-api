@@ -12,12 +12,22 @@ class DivisionController extends Controller
     public function index($id)
     {
         $divisions = Division::where('event_id', $id)->get();
+
+        if ($divisions->isEmpty()) {
+            return response()->json(['message' => 'Divisions not found'], 404);
+        }
+        
         return response()->json($divisions);
     }
 
     public function show($event, $id)
     {
         $division = Division::where('event_id', $event)->where('id', $id)->get();
+
+        if ($division->isEmpty()) {
+            return response()->json(['message' => 'Division not found'], 404);
+        }
+
         return response()->json($division);
     }
 
@@ -52,7 +62,6 @@ class DivisionController extends Controller
             'name' => $request->input('name'),
         ]);
 
-        // Redirect atau berikan respons sesuai kebutuhan aplikasi Anda
         return response()->json(['message' => 'Division updated successfully']);
     }
 
@@ -66,7 +75,7 @@ class DivisionController extends Controller
         }
 
         if ($candidates->count() > 0) {
-            return response()->json(['message' => 'Cannot delete division. Division is associated with candidates.'], 400);
+            return response()->json(['message' => 'Cannot delete division. Division is currently being used by one or multiple candidates.'], 400);
         }
 
         $division->delete();

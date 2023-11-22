@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class EventOrganizer extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'npm',
+        'description',
+    ];
 }

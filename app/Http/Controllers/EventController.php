@@ -10,6 +10,11 @@ class EventController extends Controller
     public function index()
     {
         $event = Event::all();
+
+        if ($event->isEmpty()) {
+            return response()->json(['message' => 'Event not found'], 404);
+        }
+
         return response()->json($event);
     }
 
@@ -32,26 +37,31 @@ class EventController extends Controller
 
     public function show($event)
     {
-        $candidate = Event::where('id', $event)->get();
-        return response()->json($candidate);
+        $event = Event::where('id', $event)->get();
+
+        if ($event->isEmpty()) {
+            return response()->json(['message' => 'Event not found'], 404);
+        }
+        
+        return response()->json($event);
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'title' => 'required|string|max:255',
+            'description' => 'required',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif',
         ]);
 
-        $user = Event::findOrFail($id);
+        $event = Event::findOrFail($id);
 
-        $user->update([
+        $event->update([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'logo' => $request->input('logo'),
         ]);
 
-        // Redirect atau berikan respons sesuai kebutuhan aplikasi Anda
         return response()->json(['message' => 'Event updated successfully']);
     }
 
