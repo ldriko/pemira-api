@@ -7,36 +7,23 @@ use Illuminate\Http\Request;
 
 class WhiteListController extends Controller
 {
-    public function show($id)
+    public function index($event)
     {
-        $divisions = WhiteList::where('event_id', $id)->get();
-        return response()->json($divisions);
+        $whitelist = WhiteList::where('event_id', $event)->get();
+        return response()->json($whitelist);
     }
 
-    public function store(Request $request, $id)
+    public function store(Request $request, $event)
     {
-        $request->validate([
-            'npm' => 'required|string|max:255',
-        ]);
+        $whitelist = WhiteList::where('event_id', $event)->delete();
 
-        $whitelist = new WhiteList();
-        $whitelist->event_id = $id;
-        $whitelist->npm = $request->input('npm');
-        $whitelist->save(); 
-
-        return response()->json(['message' => 'whitelist user created successfully']);
-    }
-    
-    public function delete($id)
-    {
-        $event = WhiteList::find($id);
-
-        if (!$event) {
-            return response()->json(['message' => 'whitelist user user not found'], 404);
+        foreach ($request->whitelists as $key => $val) {
+            $whitelist = new WhiteList();
+            $whitelist->event_id = $event;
+            $whitelist->npm = $val;
+            $whitelist->save();
         }
 
-        $event->delete();
-
-        return response()->json(['message' => 'whitelist user deleted successfully']);
+        return response()->json(['message' => 'whitelists created successfully!']);
     }
 }
