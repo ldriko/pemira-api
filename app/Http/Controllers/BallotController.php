@@ -111,6 +111,7 @@ class BallotController extends Controller
     {
         $ballot = Ballot::find($ballot);
         $ballot->accepted = 1;
+        $ballot->accepted_by = $request->user()->npm;
         $ballot->save();
 
         return response()->json(['message' => 'ballot accepted successfully']);
@@ -120,8 +121,15 @@ class BallotController extends Controller
     {
         $ballot = Ballot::find($ballot);
         $ballot->accepted = 2;
+        $ballot->accepted_by = $request->user()->npm;
         $ballot->save();
 
         return response()->json(['message' => 'ballot rejected successfully']);
+    }
+
+    public function next(Request $request, $event)
+    {
+        $ballots = Ballot::where('event_id', $event)->where('accepted', 0)->with('ballotDetails')->first();
+        return response()->json($ballots);
     }
 }

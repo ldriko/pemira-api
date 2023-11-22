@@ -57,6 +57,7 @@ Route::prefix('events')->name('events.')->group(function () {
         Route::prefix('ballots')->name('ballots.')->middleware(['auth:sanctum'])->group(function () {
             Route::get('', [BallotController::class, 'index']);
             Route::post('', [BallotController::class, 'store']);
+            Route::get('/next', [BallotController::class, 'next']);
             Route::get('/{ballot}/accept', [BallotController::class, 'accept']);
             Route::get('/{ballot}/reject', [BallotController::class, 'reject']);
         });
