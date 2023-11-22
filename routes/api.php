@@ -36,6 +36,7 @@ Route::prefix('events')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/{event}/open', [EventController::class, 'OpenElection']);
     Route::post('/{event}/close', [EventController::class, 'CloseElection']);
     Route::delete('/{event}', [EventController::class, 'deleteEvent']);
+    Route::put('/{event}', [EventController::class, 'update']);
 });
 
 Route::prefix('events')->name('events.')->group(function () {
@@ -56,6 +57,7 @@ Route::prefix('events')->name('events.')->group(function () {
             Route::get('{id}', [DivisionController::class, 'show']);
             Route::post('/', [DivisionController::class, 'store']);
             Route::delete('{id}', [DivisionController::class, 'destroy']);
+            Route::put('{id}', [DivisionController::class, 'update']);
         });
     });
 });

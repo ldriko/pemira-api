@@ -22,8 +22,8 @@ class EventOrganizerController extends Controller
     public function store(Request $request, $event)
     {
         $request->validate([
-            'npm' => 'required',
-            'description' => 'required',
+            'npm' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
         ]);
 
         $eo = new EventOrganizer();

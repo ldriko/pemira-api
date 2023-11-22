@@ -18,7 +18,7 @@ class EventController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required',
-            'logo' => 'required|string|min:6',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif',
         ]);
 
         $event = new Event();
@@ -36,11 +36,27 @@ class EventController extends Controller
         return response()->json($candidate);
     }
 
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+        ]);
+
+        $user = Event::findOrFail($id);
+
+        $user->update([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'logo' => $request->input('logo'),
+        ]);
+
+        // Redirect atau berikan respons sesuai kebutuhan aplikasi Anda
+        return response()->json(['message' => 'Event updated successfully']);
+    }
+
     public function OpenElection(Request $request, $event)
     {
-        // $request->validate([
-        //     'open_election_at' => 'required|date',
-        // ]);
 
         $events = Event::find($event);
 
@@ -56,9 +72,6 @@ class EventController extends Controller
 
     public function CloseElection(Request $request, $event)
     {
-        // $request->validate([
-        //     'close_election_at' => 'required|date',
-        // ]);
 
         $events = Event::find($event);
 
