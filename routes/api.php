@@ -89,8 +89,9 @@ Route::prefix('events')->name('events.')->group(function () {
             Route::get('/', [CandidatesController::class, 'index']);
             Route::get('{candidate}', [CandidatesController::class, 'show']);
             Route::post('/', [CandidatesController::class, 'store']);
-            Route::put('{candidate}', [CandidatesController::class, 'store']);
+            Route::put('{candidate}', [CandidatesController::class, 'update']);
             Route::delete('{candidate}', [CandidatesController::class, 'destroy']);
+            // Route::get('/ballots', [CandidatesController::class, 'ballots']);
         });
     });
 });

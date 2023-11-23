@@ -12,5 +12,10 @@ class Ballot extends Model
     public function ballotDetails()
     {
         return $this->hasMany(BallotDetail::class);
+        
+    public function candidates()
+    {
+        return $this->belongsToMany(Candidate::class, 'ballot_details');
     }
 }
+
