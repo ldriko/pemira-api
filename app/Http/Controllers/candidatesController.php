@@ -105,7 +105,11 @@ class CandidatesController extends Controller
 
     public function ballots($id)
     {
-        $candidates = Division::where('event_id', $id)->get();
+        $candidates = Candidate::where('event_id',$id)
+            ->whereHas('ballots', function ($query) {
+                $query->where('accepted', '1');
+            })->get();
+
         return response()->json($candidates);
     }
 }
