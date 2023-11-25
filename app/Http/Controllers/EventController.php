@@ -7,9 +7,14 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    public function show()
+    public function index()
     {
         $event = Event::all();
+
+        if ($event->isEmpty()) {
+            return response()->json(['message' => 'Event not found'], 404);
+        }
+
         return response()->json($event);
     }
 
@@ -18,57 +23,81 @@ class EventController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required',
-            'logo' => 'required|string|min:6',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif',
         ]);
 
         $event = new Event();
         $event->title = $request->input('title');
         $event->description = $request->input('description');
         $event->logo = $request->input('logo');
-        $event->save(); 
+        $event->save();
 
         return response()->json(['message' => 'Event created successfully']);
     }
 
-    public function OpenElection(Request $request, $id)
+    public function show($event)
+    {
+        $event = Event::where('id', $event)->get();
+
+        if ($event->isEmpty()) {
+            return response()->json(['message' => 'Event not found'], 404);
+        }
+        
+        return response()->json($event);
+    }
+
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'open_election_at' => 'required|date',
+            'title' => 'required|string|max:255',
+            'description' => 'required',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif',
         ]);
 
-        $event = Event::find($id);
+        $event = Event::findOrFail($id);
 
-        if (!$event) {
+        $event->update([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'logo' => $request->input('logo'),
+        ]);
+
+        return response()->json(['message' => 'Event updated successfully']);
+    }
+
+    public function OpenElection(Request $request, $event)
+    {
+
+        $events = Event::find($event);
+
+        if (!$events) {
             return response()->json(['message' => 'Event not found'], 404);
         }
 
-        $event->open_election_at = $request->input('open_election_at');
-        $event->save();
+        $events->open_election_at = now();
+        $events->save();
 
         return response()->json(['message' => 'Event open date has set successfully']);
     }
 
-    public function CloseElection(Request $request, $id)
+    public function CloseElection(Request $request, $event)
     {
-        $request->validate([
-            'close_election_at' => 'required|date',
-        ]);
 
-        $event = Event::find($id);
+        $events = Event::find($event);
 
-        if (!$event) {
+        if (!$events) {
             return response()->json(['message' => 'Event not found'], 404);
         }
 
-        $event->close_election_at = $request->input('close_election_at');
-        $event->save();
+        $events->close_election_at = now();
+        $events->save();
 
         return response()->json(['message' => 'Event close date has set successfully']);
     }
 
-    public function deleteEvent($id)
+    public function deleteEvent($event)
     {
-        $event = Event::find($id);
+        $event = Event::find($event);
 
         if (!$event) {
             return response()->json(['message' => 'Event not found'], 404);

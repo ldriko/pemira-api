@@ -8,4 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Candidate extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'division_id',
+        'first',
+        'second',
+        'vision',
+        'mission'
+
+    ];
+
+    public function ballots()
+    {
+        return $this->belongsToMany(Ballot::class, 'ballot_details');
+    }
 }
