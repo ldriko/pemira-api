@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
@@ -29,7 +31,12 @@ class EventController extends Controller
         $event = new Event();
         $event->title = $request->input('title');
         $event->description = $request->input('description');
-        $event->logo = $request->input('logo');
+
+        $eventLogo = $request->file('logo');
+        $eventLogofileName = $event->title . '_' . date('YmdHis') . '_' . $eventLogo->getClientOriginalName();
+        $eventLogo->storeAs('images/logo', $eventLogofileName);
+        $event->logo = $eventLogofileName;
+    
         $event->save();
 
         return response()->json(['message' => 'Event created successfully']);
@@ -37,7 +44,7 @@ class EventController extends Controller
 
     public function show($event)
     {
-        $event = Event::where('id', $event)->get();
+        $event = Event::where('id', $event)->first();
 
         if ($event->isEmpty()) {
             return response()->json(['message' => 'Event not found'], 404);
@@ -56,10 +63,18 @@ class EventController extends Controller
 
         $event = Event::findOrFail($id);
 
+        if ($request->hasFile('logo')) {
+            $oldImagePath = $event->logo;
+            Storage::delete('images/logo/' . $oldImagePath);
+
+            $image = $request->file('logo');
+            $path = $image->store('images/logo',);
+            $event->logo = $path;
+        }
+
         $event->update([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'logo' => $request->input('logo'),
         ]);
 
         return response()->json(['message' => 'Event updated successfully']);

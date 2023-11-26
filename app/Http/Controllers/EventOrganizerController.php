@@ -20,7 +20,7 @@ class EventOrganizerController extends Controller
 
     public function show($event, $organizer)
     {
-        $eo = EventOrganizer::where('event_id', $event)->where('id', $organizer)->get();
+        $eo = EventOrganizer::where('event_id', $event)->where('id', $organizer)->first();
 
         if ($eo->isEmpty()) {
             return response()->json(['message' => 'Event organizers not found'], 404);

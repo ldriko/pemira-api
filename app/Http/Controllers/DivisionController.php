@@ -22,7 +22,7 @@ class DivisionController extends Controller
 
     public function show($event, $id)
     {
-        $division = Division::where('event_id', $event)->where('id', $id)->get();
+        $division = Division::where('event_id', $event)->where('id', $id)->first();
 
         if ($division->isEmpty()) {
             return response()->json(['message' => 'Division not found'], 404);
