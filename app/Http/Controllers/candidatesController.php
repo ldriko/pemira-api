@@ -86,7 +86,7 @@ class CandidatesController extends Controller
 
     public function show($event, $candidate)
     {
-        $candidate = Candidate::where('event_id', $event)->where('id', $candidate)->get();
+        $candidate = Candidate::where('event_id', $event)->where('id', $candidate)->first();
         return response()->json($candidate);
     }
 
