@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\BallotDetail;
 use App\Models\Candidate;
 use App\Models\Division;
+use App\Models\EventOrganizer;
+use App\Models\WhiteList;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
@@ -22,11 +24,21 @@ class CandidatesController extends Controller
         $request->validate([
             'division_id' => 'required|string',
             'first' => 'required|string',
+            'order' => 'required|integer',
             'second' => 'required|string',
             'vision' => 'required|string',
             'mission' => 'required|string',
             'picture' => 'required|image|mimes:jpeg,png,jpg,gif'
         ]);
+        
+        $order = $request->input('order');
+        $division_id = $request->input('division_id');
+        $eventCandidateCount = Candidate::where('event_id', $id)->where('order', $order)->where('division_id', $division_id)->count();
+
+        if ($eventCandidateCount > 0) {
+            return response()->json(['message' => 'No urut already exists for this division'], 409);
+        }
+
 
         $candidate = new Candidate();
         $candidate->event_id = $id;
@@ -35,6 +47,10 @@ class CandidatesController extends Controller
         $candidate->second = $request->input('second');
         $candidate->vision = $request->input('vision');
         $candidate->mission = $request->input('mission');
+        $candidate->picture = $request->input('picture');
+        $candidate->order = $request->input('order');
+        $candidate->created_by = $request->user()->npm;
+        $candidate->save(); 
 
         $candidatespicture = $request->file('picture');
         $candidatesfileName = $candidate->division_id . '_' . date('YmdHis') . '_' . $candidatespicture->getClientOriginalName();
@@ -53,10 +69,19 @@ class CandidatesController extends Controller
             'division_id' => 'required|string',
             'first' => 'required|string',
             'second' => 'required|string',
+            'order' => 'required|integer',
             'vision' => 'required|string',
             'mission' => 'required|string',
             'picture' => 'image|mimes:jpeg,png,jpg,gif'
         ]);
+
+        $order = $request->input('order');
+        $division_id = $request->input('division_id');
+        $eventCandidateCount = Candidate::where('id', '!=', $id)->where('event_id', $event)->where('order', $order)->where('division_id', $division_id)->count();
+
+        if ($eventCandidateCount > 0) {
+            return response()->json(['message' => 'No urut already exists for this event'], 409);
+        }
 
         $candidate = Candidate::where('event_id', $event)->where('id', $id)->first();
 
@@ -79,6 +104,7 @@ class CandidatesController extends Controller
             'second' => $request->input('second'),
             'vision' => $request->input('vision'),
             'mission' => $request->input('mission'),
+            'order' => $request->input('order'),
         ]);
 
         return response()->json(['message' => 'Candidate updated successfully']);

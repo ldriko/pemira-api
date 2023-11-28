@@ -14,7 +14,8 @@ class Candidate extends Model
         'first',
         'second',
         'vision',
-        'mission'
+        'mission',
+        'order'
 
     ];
 
