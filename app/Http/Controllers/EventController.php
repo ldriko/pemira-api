@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Candidate;
 use App\Models\Event;
+use App\Models\EventOrganizer;
+use App\Models\WhiteList;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
@@ -11,6 +14,23 @@ class EventController extends Controller
     {
         $event = Event::all();
         return response()->json($event);
+    }
+
+    
+
+    public function summary($event)
+    {
+        $candidates_count = Candidate::where('event_id', $event)->count();
+
+        $whitelists_count = WhiteList::where('event_id', $event)->count();
+
+        $organizers_count = EventOrganizer::where('event_id', $event)->count();
+
+        return response()->json([
+            "candidates_count" => $candidates_count,
+            "whitelists_count" => $whitelists_count,
+            "organizers_count" => $organizers_count
+        ]);
     }
 
     public function store(Request $request)

@@ -17,6 +17,14 @@ class BallotController extends Controller
         $ballots = Ballot::where('event_id', $event)->get();
         return response()->json($ballots);
     }
+    
+    public function count($event)
+    {
+        $ballots_count = Ballot::where('event_id', $event)->count();
+        return response()->json([
+            "ballots_count" => $ballots_count
+        ]);
+    }
 
     public function store(Request $request, $event)
     {

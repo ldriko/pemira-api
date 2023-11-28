@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Candidate;
+use App\Models\EventOrganizer;
+use App\Models\WhiteList;
 use Illuminate\Http\Request;
 
 class CandidatesController extends Controller
@@ -15,9 +17,14 @@ class CandidatesController extends Controller
 
     public function store(Request $request, $id)
     {
-        // $request->validate([
-        //     // 'name' => 'required|string|max:255',
-        // ]);
+        
+        $no_urut = $request->input('no_urut');
+        $eventCandidateCount = Candidate::where('event_id', $id)->where('no_urut', $no_urut)->count();
+
+        if ($eventCandidateCount > 0) {
+            return response()->json(['message' => 'No urut already exists for this event'], 409);
+        }
+
 
         $candidate = new Candidate();
         $candidate->event_id = $id;
@@ -27,6 +34,7 @@ class CandidatesController extends Controller
         $candidate->vision = $request->input('vision');
         $candidate->mission = $request->input('mission');
         $candidate->picture = $request->input('picture');
+        $candidate->no_urut = $request->input('no_urut');
         $candidate->created_by = $request->user()->npm;
         $candidate->save(); 
 

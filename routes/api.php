@@ -33,6 +33,7 @@ Route::prefix('events')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [EventController::class, 'index']);
     Route::post('/', [EventController::class, 'store']);
     Route::get('/{event}', [EventController::class, 'show']);
+    Route::get('/{event}/summary', [EventController::class, 'summary']);
     Route::post('/{event}/open', [EventController::class, 'OpenElection']);
     Route::post('/{event}/close', [EventController::class, 'CloseElection']);
     Route::delete('/{event}', [EventController::class, 'deleteEvent']);
@@ -54,6 +55,7 @@ Route::prefix('events')->name('events.')->group(function () {
 
         Route::prefix('ballots')->name('ballots.')->middleware(['auth:sanctum'])->group(function () {
             Route::get('', [BallotController::class, 'index']);
+            Route::get('/count', [BallotController::class, 'count']);
             Route::post('', [BallotController::class, 'store']);
             Route::get('/next', [BallotController::class, 'next']);
             Route::get('/{ballot}/accept', [BallotController::class, 'accept']);
