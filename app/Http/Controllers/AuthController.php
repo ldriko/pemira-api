@@ -43,7 +43,7 @@ class AuthController extends Controller
             'name' => $providerUser->name,
             'email' => $providerUser->email,
             'npm' => strtok($providerUser->email, '@'),
-            'role' => 2,
+            'role' => 0,
             'picture' => $providerUser->avatar
         ]);
         if ($request->token == 1) {

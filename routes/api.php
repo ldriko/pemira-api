@@ -29,7 +29,7 @@ Route::get('/users', [UserController::class, 'store']);
 
 
 
-Route::prefix('events')->middleware(['auth:sanctum'])->group(function () {
+Route::prefix('events')->middleware(['auth:sanctum','panitia'])->group(function () {
     Route::get('/', [EventController::class, 'index']);
     Route::post('/', [EventController::class, 'store']);
     Route::get('/{event}', [EventController::class, 'show']);
@@ -42,7 +42,7 @@ Route::prefix('events')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('events')->name('events.')->group(function () {
     Route::prefix('{event}')->name('event.')->group(function () {
-        Route::prefix('organizers')->name('organizers.')->middleware('auth:sanctum')->group(function () {
+        Route::prefix('organizers')->name('organizers.')->middleware(['auth:sanctum','panitia'])->group(function () {
             Route::get('/', [EventOrganizerController::class, 'index']);
             Route::get('{organizer}', [EventOrganizerController::class, 'show']);
             Route::post('/', [EventOrganizerController::class, 'store']);
@@ -50,7 +50,7 @@ Route::prefix('events')->name('events.')->group(function () {
             Route::put('{organizer}', [EventOrganizerController::class, 'update']);
         });
 
-        Route::prefix('whitelists')->name('whitelists.')->middleware(['auth:sanctum'])->group(function () {
+        Route::prefix('whitelists')->name('whitelists.')->middleware(['auth:sanctum','panitia'])->group(function () {
             Route::get('', [WhiteListController::class, 'index']);
             Route::post('', [WhiteListController::class, 'store']);
         });
@@ -68,7 +68,7 @@ Route::prefix('events')->name('events.')->group(function () {
 
 Route::prefix('events')->name('events.')->group(function () {
     Route::prefix('{event}')->name('event.')->group(function () {
-        Route::prefix('divisions')->name('divisions.')->middleware('auth:sanctum')->group(function () {
+        Route::prefix('divisions')->name('divisions.')->middleware(['auth:sanctum','panitia'])->group(function () {
             Route::get('/', [DivisionController::class, 'index']);
             Route::get('{id}', [DivisionController::class, 'show']);
             Route::post('/', [DivisionController::class, 'store']);
@@ -87,7 +87,7 @@ Route::prefix('events')->name('events.')->group(function () {
 
 Route::prefix('events')->name('events.')->group(function () {
     Route::prefix('{event}')->name('event.')->group(function () {
-        Route::prefix('candidates')->name('candidates.')->middleware('auth:sanctum')->group(function () {
+        Route::prefix('candidates')->name('candidates.')->middleware(['auth:sanctum','panitia'])->group(function () {
             Route::get('/', [CandidatesController::class, 'index']);
             Route::get('/ballots', [CandidatesController::class, 'ballots']);
             Route::get('/{candidate}', [CandidatesController::class, 'show']);
@@ -109,13 +109,13 @@ Route::prefix('events')->name('events.')->group(function () {
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/callback', [AuthController::class, 'callback']);
+    Route::post('/callback', [AuthController::class, 'callback']);
 });
 
-Route::group(['prefix' => 'event'], function () {
-    Route::get('', [EventController::class, 'index']);
-    Route::get('/{id}', [EventController::class, 'show']);
-    Route::post('', [EventController::class, 'store']);
-    Route::put('/{id}', [EventController::class, 'update']);
-    Route::delete('/{id}', [EventController::class, 'destroy']);
-});
+// Route::group(['prefix' => 'event'], function () {
+//     Route::get('', [EventController::class, 'index']);
+//     Route::get('/{id}', [EventController::class, 'show']);
+//     Route::post('', [EventController::class, 'store']);
+//     Route::put('/{id}', [EventController::class, 'update']);
+//     Route::delete('/{id}', [EventController::class, 'destroy']);
+// });
