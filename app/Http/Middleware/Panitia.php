@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\EventOrganizer;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,10 @@ class Panitia
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            if (Auth::user()->role != 2) {
+            $npm = Auth::user()->npm; 
+            $organiser = EventOrganizer::where('npm', $npm)->first();
+    
+            if (!$organiser) {
                 return response()->json(['error' => 'Must be panitia'], 401);
             }
         } else {
