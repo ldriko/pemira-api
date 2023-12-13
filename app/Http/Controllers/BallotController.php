@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\Ballot;
-use App\Models\BallotDetail;
-use App\Models\Candidate;
 use App\Models\Division;
+use App\Models\Candidate;
+use Faker\Provider\Image;
+use App\Models\BallotDetail;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
@@ -17,7 +20,7 @@ class BallotController extends Controller
         $ballots = Ballot::where('event_id', $event)->get();
         return response()->json($ballots);
     }
-    
+
     public function count($event)
     {
         $ballots_count = Ballot::where('event_id', $event)->count();
@@ -28,6 +31,14 @@ class BallotController extends Controller
 
     public function store(Request $request, $event)
     {
+        $closedEvent = Event::where('id', $event)->whereNotNull('close_election_at')->first();
+
+        if ($closedEvent) {
+            return response()->json([
+                'success' => false,
+                'message' => "Event sudah tertutup. Tidak dapat mengumpulkan surat suara."
+            ], 409);
+        }
 
         try {
             $request->validate([
@@ -37,23 +48,23 @@ class BallotController extends Controller
         } catch (ValidationException $exception) {
             $errors = $exception->validator->errors();
             $errorMessage = $errors->first();
-    
+
             return response()->json([
                 'success' => false,
                 'message' => $errorMessage
             ], 409);
         }
 
-        $divisions = Division::where('event_id',$event)->get();
+        $divisions = Division::where('event_id', $event)->get();
 
-        foreach($divisions as $key => $val){
+        foreach ($divisions as $key => $val) {
             $count = 0;
-            foreach($request->details as $key2 => $val2){
-               if($val['id'] == $val2['division_id']){
-                   $count++;
-               }
+            foreach ($request->details as $key2 => $val2) {
+                if ($val['id'] == $val2['division_id']) {
+                    $count++;
+                }
             }
-            if($count != 1){
+            if ($count != 1) {
                 return response()->json([
                     'success' => false,
                     'message' => "Ballot invalid"
@@ -61,10 +72,10 @@ class BallotController extends Controller
             }
         }
 
-        foreach($request->details as $key => $val){
+        foreach ($request->details as $key => $val) {
             $ballot_user = Ballot::where('event_id', $event)->where('npm', $request->user()->npm)->first();
 
-            if(!empty($ballot_user)){
+            if (!empty($ballot_user)) {
                 return response()->json([
                     'success' => false,
                     'message' => "User sudah mencoblos"
@@ -75,23 +86,23 @@ class BallotController extends Controller
         $ballot = new Ballot();
         $ballot->event_id = $event;
         $ballot->npm = $request->user()->npm;
-        
+
         $ktm = $request->file('ktm');
-        $ktmfileName = $ballot->npm.'_'.date('YmdHis') . '_' . $ktm->getClientOriginalName();
+        $ktmfileName = $ballot->npm . '_' . date('YmdHis') . '_' . $ktm->getClientOriginalName();
         $ktm->storeAs('images/ktm', $ktmfileName);
         $ballot->ktm_picture = $ktmfileName;
-        
+
         $verification = $request->file('verification');
-        $verificationfileName = $ballot->npm.'_'.date('YmdHis') . '_' . $verification->getClientOriginalName();
+        $verificationfileName = $ballot->npm . '_' . date('YmdHis') . '_' . $verification->getClientOriginalName();
         $verification->storeAs('images/verification', $verificationfileName);
         $ballot->verification_picture = $verificationfileName;
-        
+
         $ballot->accepted = 0;
 
-        $ballot->save(); 
+        $ballot->save();
 
 
-        foreach($request->details as $key => $val){
+        foreach ($request->details as $key => $val) {
             // return [$val];
 
             $ballotDetail = new BallotDetail();
@@ -102,7 +113,7 @@ class BallotController extends Controller
         }
 
         // return [$ktmfileName];
-    
+
         // Simpan nama file di database
         // $image = new Image();
         // $image->name = $fileName;
@@ -124,7 +135,7 @@ class BallotController extends Controller
 
         return response()->json(['message' => 'ballot accepted successfully']);
     }
-    
+
     public function reject(Request $request, $event, $ballot)
     {
         $ballot = Ballot::find($ballot);
