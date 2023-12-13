@@ -94,7 +94,6 @@ Route::prefix('events')->name('events.')->group(function () {
             Route::post('/', [CandidatesController::class, 'store']);
             Route::put('{candidate}', [CandidatesController::class, 'update']);
             Route::delete('{candidate}', [CandidatesController::class, 'destroy']);
-            
         });
     });
 });

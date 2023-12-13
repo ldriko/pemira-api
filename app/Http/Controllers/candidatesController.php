@@ -13,12 +13,18 @@ use Illuminate\Support\Facades\Storage;
 
 class CandidatesController extends Controller
 {
-    public function index($id)
+    public function index($id, Request $request)
     {
-        $candidates = Candidate::where('event_id', $id)->get();
+        if ($request->has('division_id')) {
+            $divisionId = $request->input('division_id');
+            $candidates = Candidate::where('event_id', $id)->where('division_id', $divisionId)->get();
+        } else {
+            $candidates = Candidate::where('event_id', $id)->get();
+        }
+    
         return response()->json($candidates);
     }
-
+    
     public function store(Request $request, $id)
     {
         $request->validate([
@@ -30,7 +36,7 @@ class CandidatesController extends Controller
             'mission' => 'required|string',
             'picture' => 'required|image|mimes:jpeg,png,jpg,gif'
         ]);
-        
+
         $order = $request->input('order');
         $division_id = $request->input('division_id');
         $eventCandidateCount = Candidate::where('event_id', $id)->where('order', $order)->where('division_id', $division_id)->count();
@@ -50,7 +56,7 @@ class CandidatesController extends Controller
         $candidate->picture = $request->input('picture');
         $candidate->order = $request->input('order');
         $candidate->created_by = $request->user()->npm;
-        $candidate->save(); 
+        $candidate->save();
 
         $candidatespicture = $request->file('picture');
         $candidatesfileName = $candidate->division_id . '_' . date('YmdHis') . '_' . $candidatespicture->getClientOriginalName();
@@ -131,7 +137,7 @@ class CandidatesController extends Controller
 
     public function ballots($id)
     {
-        $candidates = Candidate::where('event_id',$id)
+        $candidates = Candidate::where('event_id', $id)
             ->whereHas('ballots', function ($query) {
                 $query->where('accepted', '1');
             })->get();
