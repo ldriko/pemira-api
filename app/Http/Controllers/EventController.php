@@ -14,16 +14,8 @@ class EventController extends Controller
 {
     public function index()
     {
-        $event = Event::all();
-
-        if ($event->isEmpty()) {
-            return response()->json(['message' => 'Event not found'], 404);
-        }
-
-        return response()->json($event);
+        return Event::all();
     }
-
-    
 
     public function summary($event)
     {
@@ -52,11 +44,8 @@ class EventController extends Controller
         $event->title = $request->input('title');
         $event->description = $request->input('description');
 
-        $eventLogo = $request->file('logo');
-        $eventLogofileName = $event->title . '_' . date('YmdHis') . '_' . $eventLogo->getClientOriginalName();
-        $eventLogo->storeAs('images/logo', $eventLogofileName);
-        $event->logo = $eventLogofileName;
-    
+        $event->logo = Storage::disk('public')->put('events/logo', $request->file('logo'));
+
         $event->save();
 
         return response()->json(['message' => 'Event created successfully']);
@@ -64,12 +53,8 @@ class EventController extends Controller
 
     public function show($event)
     {
-        $event = Event::where('id', $event)->first();
+        $event = Event::where('id', $event)->firstOrFail();
 
-        if ($event->isEmpty()) {
-            return response()->json(['message' => 'Event not found'], 404);
-        }
-        
         return response()->json($event);
     }
 

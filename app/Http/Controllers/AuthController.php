@@ -32,20 +32,30 @@ class AuthController extends Controller
 
         [$username, $domain] = explode('@', $providerUser->email);
 
-        if (strpos($domain, 'student.upnjatim.ac.id') === false)
-            return response()->json(['message' => 'Gunakan akun google UPN!'], 401);
-        else if (substr($username, 2, 2) !== '08')
-            return response()->json(['message' => 'Akun google tersebut tidak terdaftar sebagai mahasiswa Informatika'], 401);
+        $whitelistPrefixes = ['20', '21', '22', '23'];
 
-        $user = User::query()->firstOrCreate([
-            'provider_id' => $providerUser->getId(),
-        ], [
-            'name' => $providerUser->name,
-            'email' => $providerUser->email,
-            'npm' => strtok($providerUser->email, '@'),
-            'role' => 0,
-            'picture' => $providerUser->avatar
-        ]);
+        if (strpos($domain, 'student.upnjatim.ac.id') === false)
+            return response()->json(['message' => 'Maaf, kamu harus menggunakan akun google UPN!'], 400);
+        else if (substr($username, 2, 2) !== '08' || !in_array(substr($username, 0, 2), $whitelistPrefixes))
+            return response()->json(['message' => 'Maaf, akun tersebut tidak memenuhi syarat untuk mencoblos!'], 400);
+
+        $user = User::query()->find(strtok($providerUser->email, '@'));
+
+        if (!$user) {
+            $user = User::query()->create([
+                'name' => $providerUser->name,
+                'email' => $providerUser->email,
+                'npm' => strtok($providerUser->email, '@'),
+                'role' => 0,
+                'picture' => $providerUser->avatar
+            ]);
+        } else {
+            $user->update([
+                'name' => $providerUser->name,
+                'picture' => $providerUser->avatar
+            ]);
+        }
+
         if ($request->token == 1) {
             $login = $user->createToken('login')->plainTextToken;
             return [
@@ -63,5 +73,10 @@ class AuthController extends Controller
         $user = Socialite::driver('google')->user();
 
         dd($user);
+    }
+
+    public function user()
+    {
+        return Auth::user();
     }
 }

@@ -13,4 +13,9 @@ class Division extends Model
         'name',
         'event_id',
     ];
+
+    public function candidates()
+    {
+        return $this->hasMany(Candidate::class);
+    }
 }

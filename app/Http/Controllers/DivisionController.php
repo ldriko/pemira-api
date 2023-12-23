@@ -11,22 +11,21 @@ class DivisionController extends Controller
 {
     public function index($id)
     {
-        $divisions = Division::where('event_id', $id)->get();
+        $divisions = Division::query()
+            ->where('event_id', $id)
+            ->withCount('candidates')
+            ->get();
 
         if ($divisions->isEmpty()) {
             return response()->json(['message' => 'Divisions not found'], 404);
         }
-        
+
         return response()->json($divisions);
     }
 
     public function show($event, $id)
     {
-        $division = Division::where('event_id', $event)->where('id', $id)->first();
-
-        if ($division->isEmpty()) {
-            return response()->json(['message' => 'Division not found'], 404);
-        }
+        $division = Division::where('event_id', $event)->where('id', $id)->firstOrFail();
 
         return response()->json($division);
     }
@@ -45,7 +44,7 @@ class DivisionController extends Controller
         return response()->json(['message' => 'Division created successfully']);
     }
 
-    public function update(Request $request,$event, $id)
+    public function update(Request $request, $event, $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
