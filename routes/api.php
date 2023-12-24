@@ -20,15 +20,18 @@ use App\Http\Controllers\WhiteListController;
 |
 */
 
-Route::prefix('events')->middleware(['auth:sanctum', 'panitia'])->group(function () {
-    Route::get('/', [EventController::class, 'index']);
-    Route::post('/', [EventController::class, 'store']);
+Route::prefix('events')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/{event}', [EventController::class, 'show']);
-    Route::get('/{event}/summary', [EventController::class, 'summary']);
-    Route::post('/{event}/open', [EventController::class, 'OpenElection']);
-    Route::post('/{event}/close', [EventController::class, 'CloseElection']);
-    Route::delete('/{event}', [EventController::class, 'deleteEvent']);
-    Route::put('/{event}', [EventController::class, 'update']);
+
+    Route::middleware('panitia')->group(function () {
+        Route::get('/', [EventController::class, 'index']);
+        Route::post('/', [EventController::class, 'store']);
+        Route::get('/{event}/summary', [EventController::class, 'summary']);
+        Route::post('/{event}/open', [EventController::class, 'OpenElection']);
+        Route::post('/{event}/close', [EventController::class, 'CloseElection']);
+        Route::delete('/{event}', [EventController::class, 'deleteEvent']);
+        Route::put('/{event}', [EventController::class, 'update']);
+    });
 });
 
 Route::prefix('events')->name('events.')->group(function () {
@@ -69,10 +72,11 @@ Route::prefix('events')->name('events.')->group(function () {
     });
 });
 
-Route::prefix('events')->name('events.')->group(function () {
+Route::prefix('events')->name('events.')->middleware('auth:sanctum')->group(function () {
+    Route::get('/{event}/candidates', [CandidatesController::class, 'index']);
+
     Route::prefix('{event}')->name('event.')->group(function () {
-        Route::prefix('candidates')->name('candidates.')->middleware(['auth:sanctum', 'panitia'])->group(function () {
-            Route::get('/', [CandidatesController::class, 'index']);
+        Route::prefix('candidates')->name('candidates.')->middleware('panitia')->group(function () {
             Route::get('/ballots', [CandidatesController::class, 'ballots']);
             Route::get('/{candidate}', [CandidatesController::class, 'show']);
             Route::post('/', [CandidatesController::class, 'store']);

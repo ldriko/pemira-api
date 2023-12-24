@@ -306,7 +306,7 @@ class EventSeeder extends Seeder
             'second_name' => null,
             'vision' => 'Terwujudnya Badan Legislatif Jurusan menjadi organisasi yang solid, aktif, dan bertanggung jawab',
             'mission' => '1. Pengoptimalan sumber daya mahasiswa dan segala bentuk aspirasi mahasiswa jurusan informatika
-            2. Peningkatan rasa kekeluargaan dan solidaritas antar mahasiswajurusan informatika',
+2. Peningkatan rasa kekeluargaan dan solidaritas antar mahasiswajurusan informatika',
             'picture' => 'events/candidates/candidate.jpg',
             'created_by' => 0
         ]);
@@ -321,7 +321,7 @@ class EventSeeder extends Seeder
             'second_name' => null,
             'vision' => 'Terwujudnya BLJ sebagai Lembaga Legislatif yang dinamis dan transparan',
             'mission' => '1. Menjadi sebuah jembatan antara KM dan HIMATIFA khususnya BLJ agar aspirasi para KM dapat tercapai dengan baik dan jelas
-            2. Berperan aktif dalam peningkatan Himatifa khususnya BLJ guna mempercepat terwujudnya BLJ sebagai Lembaga Lesgislatif yang dinamis dan transparan',
+2. Berperan aktif dalam peningkatan Himatifa khususnya BLJ guna mempercepat terwujudnya BLJ sebagai Lembaga Lesgislatif yang dinamis dan transparan',
             'picture' => 'events/candidates/candidate.jpg',
             'created_by' => 0
         ]);
@@ -350,7 +350,7 @@ class EventSeeder extends Seeder
             'second_name' => null,
             'vision' => 'Mewujudkan badan legislatif menjadi organisasi yang memiliki solidaritas yang tinggi serta meningkatkan suatu kinerja dalam mewadahi aspirasi mahasiswa di dalam lingkup jurusan dan memiliki sikap bertanggung jawab.',
             'mission' => '1. Menjalankan tugas dan kewajiban sebagai Badan Legislatif Jurusan dengan sebaik-baiknya serta dapat berkomitmen dan bertanggung jawab
-            2. Dapat Berkontribusi dalam meningkatkan solidaritas di dalam lingkup jurusan',
+2. Dapat Berkontribusi dalam meningkatkan solidaritas di dalam lingkup jurusan',
             'picture' => 'events/candidates/candidate.jpg',
             'created_by' => 0
         ]);
@@ -378,11 +378,11 @@ class EventSeeder extends Seeder
             'second' => null,
             'second_name' => null,
             'vision' => '1. Menjadikan BLJ menjadi rumah aspirasi yang nyaman bagi KM
-            2. Menjadikan produktif dan representatif dalam menyuarakan aspirasi KM
-            3. Terwujudnya harmonisasi dan jaga keselarasan yang baik anatar stakeholder disiplin, kritis dan bewawasan luas',
+2. Menjadikan produktif dan representatif dalam menyuarakan aspirasi KM
+3. Terwujudnya harmonisasi dan jaga keselarasan yang baik anatar stakeholder disiplin, kritis dan bewawasan luas',
             'mission' => '1. Meningkatkan dan mengembangkan fungsi Badan Legislatif Jurusan
-            2. Pengoptimalan fungsi dan peran wadah aspirasi KM
-            3. Menciptakan pembaharuan dan inovasi sesuai dengan kebutuhan',
+2. Pengoptimalan fungsi dan peran wadah aspirasi KM
+3. Menciptakan pembaharuan dan inovasi sesuai dengan kebutuhan',
             'picture' => 'events/candidates/candidate.jpg',
             'created_by' => 0
         ]);
@@ -439,9 +439,9 @@ class EventSeeder extends Seeder
             'second_name' => 'Moch Wahyu Sampurno Utomo',
             'vision' => 'Mewujudkan HIMATIFA sebagai wadah yang mendorong perkembangan, dan meningkatkan kualitas seluruh keluarga mahasiswa Informatika, serta menjadi mitra terpercaya bagi semua pihak dalam menciptakan lingkungan yang inovatif dan berprestasi.',
             'mission' => '1. Menciptakan lingkungan Himpunan Mahasiswa Informatika yang responsif terhadap aspirasi dan inspirasi KM Informatika.
-            2. Menciptakan lingkungan yang kooperatif dalam berbagai bidang yang menarik minat KM Informatika.
-            3. Membangun kolaborasi yang baik antar sivitas akademika, maupun pihak eksternal HIMATIFA guna memberi peluang pengembangan kepada keluarga mahasiswa Informatika.
-            4. Mewadahi minat dan bakat baik dalam hal akademik maupun non-akademik untuk menjadikan keluarga mahasiswa Informatika yang inovatif dan berprestasi',
+2. Menciptakan lingkungan yang kooperatif dalam berbagai bidang yang menarik minat KM Informatika.
+3. Membangun kolaborasi yang baik antar sivitas akademika, maupun pihak eksternal HIMATIFA guna memberi peluang pengembangan kepada keluarga mahasiswa Informatika.
+4. Mewadahi minat dan bakat baik dalam hal akademik maupun non-akademik untuk menjadikan keluarga mahasiswa Informatika yang inovatif dan berprestasi',
             'picture' => 'events/candidates/candidate.jpg',
             'created_by' => 0
         ]);

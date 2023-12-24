@@ -42,8 +42,10 @@ class BallotController extends Controller
 
         try {
             $request->validate([
-                "details.*.division_id" => "required|exists:divisions,id",
-                "details.*.candidate_id" => "required|exists:candidates,id"
+                'details.*.division_id' => 'required|exists:divisions,id',
+                'details.*.candidate_id' => 'required|exists:candidates,id',
+                'ktm_picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+                'verification_picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
             ]);
         } catch (ValidationException $exception) {
             $errors = $exception->validator->errors();
@@ -55,16 +57,23 @@ class BallotController extends Controller
             ], 409);
         }
 
-        $divisions = Division::where('event_id', $event)->get();
-
-        foreach ($divisions as $key => $val) {
-            $count = 0;
-            foreach ($request->details as $key2 => $val2) {
-                if ($val['id'] == $val2['division_id']) {
-                    $count++;
-                }
+        foreach ($request->details as $detail) {
+            $division = Division::query()
+                ->where('event_id', $event)
+                ->where('id', $detail['division_id'])
+                ->first();
+            if (!$division) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Ballot invalid"
+                ], 409);
             }
-            if ($count != 1) {
+
+            $candidate = Candidate::query()
+                ->where('event_id', $event)
+                ->where('id', $detail['candidate_id'])
+                ->first();
+            if (!$candidate) {
                 return response()->json([
                     'success' => false,
                     'message' => "Ballot invalid"
@@ -72,56 +81,38 @@ class BallotController extends Controller
             }
         }
 
-        foreach ($request->details as $key => $val) {
-            $ballot_user = Ballot::where('event_id', $event)->where('npm', $request->user()->npm)->first();
-
-            if (!empty($ballot_user)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "User sudah mencoblos"
-                ], 409);
-            }
+        if (Ballot::query()->where('event_id', $event)->where('npm', $request->user()->npm)->first()) {
+            return response()->json([
+                'success' => false,
+                'message' => "User sudah mencoblos"
+            ], 409);
         }
 
-        $ballot = new Ballot();
-        $ballot->event_id = $event;
-        $ballot->npm = $request->user()->npm;
+        $ballot = Ballot::query()->create([
+            'event_id' => $event,
+            'npm' => $request->user()->npm,
+            'accepted' => 0
+        ]);
 
-        $ktm = $request->file('ktm');
-        $ktmfileName = $ballot->npm . '_' . date('YmdHis') . '_' . $ktm->getClientOriginalName();
-        $ktm->storeAs('images/ktm', $ktmfileName);
-        $ballot->ktm_picture = $ktmfileName;
+        $ktmPicture = Storage::disk('public')->put(
+            'events/ballots/ktm',
+            $request->ktm_picture
+        );
+        $verificationPicture = Storage::disk('public')->put(
+            'events/ballots/verification',
+            $request->verification_picture
+        );
 
-        $verification = $request->file('verification');
-        $verificationfileName = $ballot->npm . '_' . date('YmdHis') . '_' . $verification->getClientOriginalName();
-        $verification->storeAs('images/verification', $verificationfileName);
-        $ballot->verification_picture = $verificationfileName;
+        $ballot->ktm_picture = $ktmPicture;
+        $ballot->verification_picture = $verificationPicture;
 
-        $ballot->accepted = 0;
-
-        $ballot->save();
-
-
-        foreach ($request->details as $key => $val) {
-            // return [$val];
-
-            $ballotDetail = new BallotDetail();
-            $ballotDetail->ballot_id = $ballot->id;
-            $ballotDetail->candidate_id = $val['candidate_id'];
-
-            $ballotDetail->save();
+        foreach ($request->details as $detail) {
+            BallotDetail::query()->create([
+                'ballot_id' => $ballot->id,
+                'division_id' => $detail['division_id'],
+                'candidate_id' => $detail['candidate_id']
+            ]);
         }
-
-        // return [$ktmfileName];
-
-        // Simpan nama file di database
-        // $image = new Image();
-        // $image->name = $fileName;
-        // $image->extension = $file->getClientOriginalExtension();
-        // $image->size = $file->getSize();
-        // $image->mime_type = $file->getMimeType();
-        // $image->save();
-
 
         return response()->json(['message' => 'ballot created successfully']);
     }

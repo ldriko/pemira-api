@@ -95,6 +95,7 @@ class EventController extends Controller
         }
 
         $events->open_election_at = now();
+        $events->close_election_at = null;
         $events->save();
 
         return response()->json(['message' => 'Event open date has set successfully']);
