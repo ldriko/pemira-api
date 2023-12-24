@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Division extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'event_id',
+    ];
+
+    public function candidates()
+    {
+        return $this->hasMany(Candidate::class);
+    }
 }
