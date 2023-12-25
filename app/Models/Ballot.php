@@ -9,6 +9,12 @@ class Ballot extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'accepted' => 'boolean',
+    ];
+
+    protected $guarded = [];
+
     public function ballotDetails()
     {
         return $this->hasMany(BallotDetail::class);
@@ -18,5 +24,9 @@ class Ballot extends Model
     {
         return $this->belongsToMany(Candidate::class, 'ballot_details');
     }
-}
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'npm', 'npm');
+    }
+}

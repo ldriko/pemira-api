@@ -50,21 +50,26 @@ Route::prefix('events')->name('events.')->group(function () {
         });
 
         Route::prefix('ballots')->name('ballots.')->middleware(['auth:sanctum'])->group(function () {
+            Route::get('/user', [BallotController::class, 'user']);
             Route::get('', [BallotController::class, 'index']);
             Route::get('/count', [BallotController::class, 'count']);
+            Route::get('/latest', [BallotController::class, 'latest']);
             Route::post('', [BallotController::class, 'store']);
             Route::get('/next', [BallotController::class, 'next']);
-            Route::get('/{ballot}/accept', [BallotController::class, 'accept']);
-            Route::get('/{ballot}/reject', [BallotController::class, 'reject']);
+            Route::post('/{ballot}/accept', [BallotController::class, 'accept']);
+            Route::post('/{ballot}/reject', [BallotController::class, 'reject']);
         });
+
+        Route::get('/result', [EventController::class, 'result']);
     });
 });
 
-Route::prefix('events')->name('events.')->group(function () {
+Route::prefix('events')->name('events.')->middleware('auth:sanctum')->group(function () {
     Route::prefix('{event}')->name('event.')->group(function () {
+        Route::get('/divisions/{id}', [DivisionController::class, 'show']);
+
         Route::prefix('divisions')->name('divisions.')->middleware(['auth:sanctum', 'panitia'])->group(function () {
             Route::get('/', [DivisionController::class, 'index']);
-            Route::get('{id}', [DivisionController::class, 'show']);
             Route::post('/', [DivisionController::class, 'store']);
             Route::delete('{id}', [DivisionController::class, 'destroy']);
             Route::put('{id}', [DivisionController::class, 'update']);

@@ -21,6 +21,11 @@ class Candidate extends Model
 
     public function ballots()
     {
-        return $this->belongsToMany(Ballot::class, 'ballot_details');
+        return $this->hasManyThrough(Ballot::class, BallotDetail::class, 'candidate_id', 'id', 'id', 'ballot_id');
+    }
+
+    public function votes()
+    {
+        return $this->ballots()->where('accepted', '1');
     }
 }

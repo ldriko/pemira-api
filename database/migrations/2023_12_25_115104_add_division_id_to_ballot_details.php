@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('divisions', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('event_id');
-            $table->foreign('event_id')->references('id')->on('events');
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('ballot_details', function (Blueprint $table) {
+            $table->unsignedBigInteger('division_id')->after('id');
+            $table->foreign('division_id')->references('id')->on('divisions');
         });
     }
 
@@ -25,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('divisions');
+        Schema::table('ballot_details', function (Blueprint $table) {
+            //
+        });
     }
 };
