@@ -445,5 +445,19 @@ class EventSeeder extends Seeder
             'picture' => 'events/candidates/candidate.jpg',
             'created_by' => 0
         ]);
+
+        Candidate::query()->create([
+            'event_id' => $event->id,
+            'division_id' => 4,
+            'order' => '2',
+            'first' => '-',
+            'first_name' => 'Kotak Kosong',
+            'second' => '',
+            'second_name' => '',
+            'vision' => '-',
+            'mission' => '-',
+            'picture' => 'events/candidates/noone.jpg',
+            'created_by' => 0
+        ]);
     }
 }
