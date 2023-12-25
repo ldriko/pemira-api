@@ -101,17 +101,10 @@ class EventController extends Controller
         return response()->json(['message' => 'Event open date has set successfully']);
     }
 
-    public function CloseElection(Request $request, $event)
+    public function CloseElection(Request $request, Event $event)
     {
-
-        $events = Event::find($event);
-
-        if (!$events) {
-            return response()->json(['message' => 'Event not found'], 404);
-        }
-
-        $events->close_election_at = now();
-        $events->save();
+        $event->close_election_at = now();
+        $event->save();
 
         return response()->json(['message' => 'Event close date has set successfully']);
     }
@@ -127,5 +120,15 @@ class EventController extends Controller
         $event->delete();
 
         return response()->json(['message' => 'Event deleted successfully']);
+    }
+
+    public function result(Event $event)
+    {
+        return $event->divisions()
+            ->with('candidates', function ($query) {
+                $query->withCount('votes')
+                    ->orderBy('votes_count', 'desc');
+            })
+            ->get();
     }
 }

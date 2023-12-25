@@ -10,6 +10,7 @@ use Faker\Provider\Image;
 use App\Models\BallotDetail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
@@ -23,10 +24,7 @@ class BallotController extends Controller
 
     public function count($event)
     {
-        $ballots_count = Ballot::where('event_id', $event)->count();
-        return response()->json([
-            "ballots_count" => $ballots_count
-        ]);
+        return Ballot::where('event_id', $event)->count();
     }
 
     public function store(Request $request, $event)
@@ -40,22 +38,13 @@ class BallotController extends Controller
             ], 409);
         }
 
-        try {
-            $request->validate([
-                'details.*.division_id' => 'required|exists:divisions,id',
-                'details.*.candidate_id' => 'required|exists:candidates,id',
-                'ktm_picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
-                'verification_picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
-            ]);
-        } catch (ValidationException $exception) {
-            $errors = $exception->validator->errors();
-            $errorMessage = $errors->first();
-
-            return response()->json([
-                'success' => false,
-                'message' => $errorMessage
-            ], 409);
-        }
+        $request->validate([
+            'details' => 'required|array',
+            'details.*.division_id' => 'required|exists:divisions,id',
+            'details.*.candidate_id' => 'required|exists:candidates,id',
+            'ktm_picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'verification_picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+        ]);
 
         foreach ($request->details as $detail) {
             $division = Division::query()
@@ -88,11 +77,7 @@ class BallotController extends Controller
             ], 409);
         }
 
-        $ballot = Ballot::query()->create([
-            'event_id' => $event,
-            'npm' => $request->user()->npm,
-            'accepted' => 0
-        ]);
+        DB::beginTransaction();
 
         $ktmPicture = Storage::disk('public')->put(
             'events/ballots/ktm',
@@ -103,8 +88,12 @@ class BallotController extends Controller
             $request->verification_picture
         );
 
-        $ballot->ktm_picture = $ktmPicture;
-        $ballot->verification_picture = $verificationPicture;
+        $ballot = Ballot::query()->create([
+            'event_id' => $event,
+            'npm' => $request->user()->npm,
+            'ktm_picture' => $ktmPicture,
+            'verification_picture' => $verificationPicture,
+        ]);
 
         foreach ($request->details as $detail) {
             BallotDetail::query()->create([
@@ -114,12 +103,13 @@ class BallotController extends Controller
             ]);
         }
 
+        DB::commit();
+
         return response()->json(['message' => 'ballot created successfully']);
     }
 
-    public function accept(Request $request, $event, $ballot)
+    public function accept(Request $request, Event $event, Ballot $ballot)
     {
-        $ballot = Ballot::find($ballot);
         $ballot->accepted = 1;
         $ballot->accepted_by = $request->user()->npm;
         $ballot->save();
@@ -127,19 +117,36 @@ class BallotController extends Controller
         return response()->json(['message' => 'ballot accepted successfully']);
     }
 
-    public function reject(Request $request, $event, $ballot)
+    public function reject(Request $request, Event $event, Ballot $ballot)
     {
-        $ballot = Ballot::find($ballot);
-        $ballot->accepted = 2;
+        $ballot->accepted = 0;
         $ballot->accepted_by = $request->user()->npm;
         $ballot->save();
 
         return response()->json(['message' => 'ballot rejected successfully']);
     }
 
-    public function next(Request $request, $event)
+    public function next(Event $event)
     {
-        $ballots = Ballot::where('event_id', $event)->where('accepted', 0)->with('ballotDetails')->first();
-        return response()->json($ballots);
+        return Ballot::query()
+            ->where('event_id', $event->id)
+            ->where('accepted', null)
+            ->orderBy('created_at', 'asc')
+            ->firstOrFail();
+    }
+
+    public function user(Request $request)
+    {
+        return Ballot::query()->where('npm', $request->user()->npm)->firstOrFail();
+    }
+
+    public function latest(Event $event)
+    {
+        return Ballot::query()
+            ->with('user')
+            ->where('event_id', $event->id)
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get();
     }
 }

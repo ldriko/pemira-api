@@ -259,7 +259,7 @@ class EventSeeder extends Seeder
             ]);
         }
 
-        $divisions = ['BLJ 2023', 'BLJ 2022', 'BLJ 2021', 'KAHIMA & WAKAHIMA'];
+        $divisions = ['BLJ Angkatan 2023', 'BLJ Angkatan 2022', 'BLJ Angkatan 2021', 'KAHIMA & WAKAHIMA'];
 
         foreach ($divisions as $division) {
             Division::query()->create([

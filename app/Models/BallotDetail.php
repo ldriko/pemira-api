@@ -9,5 +9,7 @@ class BallotDetail extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     protected $table = 'ballot_details';
 }

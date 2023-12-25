@@ -16,4 +16,9 @@ class Event extends Model
         'open_election_at',
         'close_election_at',
     ];
+
+    public function divisions()
+    {
+        return $this->hasMany(Division::class);
+    }
 }
