@@ -21,4 +21,14 @@ class Event extends Model
     {
         return $this->hasMany(Division::class);
     }
+
+    public function ballots()
+    {
+        return $this->hasMany(Ballot::class);
+    }
+
+    public function acceptedBallots()
+    {
+        return $this->ballots()->where('accepted', 1);
+    }
 }
