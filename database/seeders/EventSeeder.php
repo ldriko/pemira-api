@@ -278,7 +278,7 @@ class EventSeeder extends Seeder
             'second_name' => null,
             'vision' => 'Menjadikan BLJ sebagai lembaga yang dapat mewadahi aspirasi keluarga mahasiswa informatika dan bermanfaat di lingkungan mahasiswa informatika',
             'mission' => 'Menjalankan tugas dan tanggungjawab dengan transparansi dan keterbukaan, serta membentuk kepribadian yang lebih peka akan lingkungan sekitar',
-            'picture' => 'events/candidates/candidate.jpg',
+            'picture' => 'events/candidates/11.webp',
             'created_by' => 0
         ]);
 
@@ -292,7 +292,7 @@ class EventSeeder extends Seeder
             'second_name' => null,
             'vision' => 'Mewujudkan BLJ Informatika sebagai lembaga yang aktif, profesional, dan berintegritas dalam pengawasan dan mewadahi aspirasi.',
             'mission' => 'Menjalankan tanggung jawab dengan berpegang pada prinsip demokratis, inklusifitas, dan humanis.',
-            'picture' => 'events/candidates/candidate.jpg',
+            'picture' => 'events/candidates/12.webp',
             'created_by' => 0
         ]);
 
@@ -307,7 +307,7 @@ class EventSeeder extends Seeder
             'vision' => 'Terwujudnya Badan Legislatif Jurusan menjadi organisasi yang solid, aktif, dan bertanggung jawab',
             'mission' => '1. Pengoptimalan sumber daya mahasiswa dan segala bentuk aspirasi mahasiswa jurusan informatika
 2. Peningkatan rasa kekeluargaan dan solidaritas antar mahasiswajurusan informatika',
-            'picture' => 'events/candidates/candidate.jpg',
+            'picture' => 'events/candidates/13.webp',
             'created_by' => 0
         ]);
 
@@ -322,7 +322,7 @@ class EventSeeder extends Seeder
             'vision' => 'Terwujudnya BLJ sebagai Lembaga Legislatif yang dinamis dan transparan',
             'mission' => '1. Menjadi sebuah jembatan antara KM dan HIMATIFA khususnya BLJ agar aspirasi para KM dapat tercapai dengan baik dan jelas
 2. Berperan aktif dalam peningkatan Himatifa khususnya BLJ guna mempercepat terwujudnya BLJ sebagai Lembaga Lesgislatif yang dinamis dan transparan',
-            'picture' => 'events/candidates/candidate.jpg',
+            'picture' => 'events/candidates/14.webp',
             'created_by' => 0
         ]);
 
@@ -336,7 +336,7 @@ class EventSeeder extends Seeder
             'second_name' => null,
             'vision' => 'Mewujudkan jalannya kegiatan dilingkungan prodi yang baik dan solidaritas',
             'mission' => 'Mengawasi jalannya kegiatan yang akan dilakukan dengan baik dan mermanfaat bagi mahasiswa.',
-            'picture' => 'events/candidates/candidate.jpg',
+            'picture' => 'events/candidates/21.webp',
             'created_by' => 0
         ]);
 
@@ -351,7 +351,7 @@ class EventSeeder extends Seeder
             'vision' => 'Mewujudkan badan legislatif menjadi organisasi yang memiliki solidaritas yang tinggi serta meningkatkan suatu kinerja dalam mewadahi aspirasi mahasiswa di dalam lingkup jurusan dan memiliki sikap bertanggung jawab.',
             'mission' => '1. Menjalankan tugas dan kewajiban sebagai Badan Legislatif Jurusan dengan sebaik-baiknya serta dapat berkomitmen dan bertanggung jawab
 2. Dapat Berkontribusi dalam meningkatkan solidaritas di dalam lingkup jurusan',
-            'picture' => 'events/candidates/candidate.jpg',
+            'picture' => 'events/candidates/22.webp',
             'created_by' => 0
         ]);
 
@@ -365,7 +365,7 @@ class EventSeeder extends Seeder
             'second_name' => null,
             'vision' => 'Mewujudkan lingkungan mahasiswa yang aktif dan inovatif',
             'mission' => 'Membantu mewujudkan program yang bisa membuat mahasiswa menjadi aktif serta kritis',
-            'picture' => 'events/candidates/candidate.jpg',
+            'picture' => 'events/candidates/23.webp',
             'created_by' => 0
         ]);
 
@@ -383,7 +383,7 @@ class EventSeeder extends Seeder
             'mission' => '1. Meningkatkan dan mengembangkan fungsi Badan Legislatif Jurusan
 2. Pengoptimalan fungsi dan peran wadah aspirasi KM
 3. Menciptakan pembaharuan dan inovasi sesuai dengan kebutuhan',
-            'picture' => 'events/candidates/candidate.jpg',
+            'picture' => 'events/candidates/24.webp',
             'created_by' => 0
         ]);
 
@@ -397,7 +397,7 @@ class EventSeeder extends Seeder
             'second_name' => null,
             'vision' => 'Mewujudkan lingkungan yang aktif, positif dan inklusif',
             'mission' => 'Dengan menjadi wadah untuk penerima aspirasi dan meningkatkan hubungan anatara Legilatif dan Eksekutif',
-            'picture' => 'events/candidates/candidate.jpg',
+            'picture' => 'events/candidates/25.webp',
             'created_by' => 0
         ]);
 
@@ -411,7 +411,7 @@ class EventSeeder extends Seeder
             'second_name' => null,
             'vision' => 'Berkomitmen untuk meningkatkan kualitas pendidikan, kesejahteraan mahasiswa, dan keberlanjutan lingkungan akademis.',
             'mission' => 'Mengamati jalannya kegiatan dengan baik serta memberikan manfaat yang nyata bagi mahasiswa',
-            'picture' => 'events/candidates/candidate.jpg',
+            'picture' => 'events/candidates/26.webp',
             'created_by' => 0
         ]);
 
@@ -425,7 +425,7 @@ class EventSeeder extends Seeder
             'second_name' => null,
             'vision' => 'Menjadikan badan Legislatif Jurusan dengan meningkatkan kinerja dalam menampung aspirasi amahasiswa agar kepercayaan mahasiswa meningkat.',
             'mission' => 'Meningkatkan kinerja dalam menjadi wadah aspirasi mahasiswa',
-            'picture' => 'events/candidates/candidate.jpg',
+            'picture' => 'events/candidates/31.webp',
             'created_by' => 0
         ]);
 
@@ -442,7 +442,7 @@ class EventSeeder extends Seeder
 2. Menciptakan lingkungan yang kooperatif dalam berbagai bidang yang menarik minat KM Informatika.
 3. Membangun kolaborasi yang baik antar sivitas akademika, maupun pihak eksternal HIMATIFA guna memberi peluang pengembangan kepada keluarga mahasiswa Informatika.
 4. Mewadahi minat dan bakat baik dalam hal akademik maupun non-akademik untuk menjadikan keluarga mahasiswa Informatika yang inovatif dan berprestasi',
-            'picture' => 'events/candidates/candidate.jpg',
+            'picture' => 'events/candidates/41.webp',
             'created_by' => 0
         ]);
 
