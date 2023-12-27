@@ -126,9 +126,14 @@ class EventController extends Controller
     {
         return $event->divisions()
             ->with('candidates', function ($query) {
-                $query->withCount('votes')
+                $query->withCount(['ballots', 'votes'])
                     ->orderBy('votes_count', 'desc');
             })
             ->get();
+    }
+
+    public function resultOverall(Event $event)
+    {
+        return $event->loadCount(['ballots', 'acceptedBallots']);
     }
 }

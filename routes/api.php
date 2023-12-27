@@ -61,6 +61,7 @@ Route::prefix('events')->name('events.')->group(function () {
         });
 
         Route::get('/result', [EventController::class, 'result']);
+        Route::get('/result/overall', [EventController::class, 'resultOverall']);
     });
 });
 

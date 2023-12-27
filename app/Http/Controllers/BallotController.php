@@ -129,6 +129,7 @@ class BallotController extends Controller
     public function next(Event $event)
     {
         return Ballot::query()
+            ->with('user')
             ->where('event_id', $event->id)
             ->where('accepted', null)
             ->orderBy('created_at', 'asc')
