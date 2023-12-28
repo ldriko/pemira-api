@@ -134,6 +134,6 @@ class EventController extends Controller
 
     public function resultOverall(Event $event)
     {
-        return $event->loadCount(['ballots', 'acceptedBallots']);
+        return $event->loadCount(['ballots', 'acceptedBallots', 'rejectedBallots']);
     }
 }

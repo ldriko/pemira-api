@@ -31,4 +31,9 @@ class Event extends Model
     {
         return $this->ballots()->where('accepted', 1);
     }
+
+    public function rejectedBallots()
+    {
+        return $this->ballots()->where('accepted', 0);
+    }
 }
