@@ -150,4 +150,13 @@ class BallotController extends Controller
             ->limit(10)
             ->get();
     }
+
+    public function previous(Event $event, Ballot $ballot)
+    {
+        return Ballot::query()
+            ->with('user')
+            ->where('event_id', $event->id)
+            ->where('id', $ballot->id - 1)
+            ->firstOrFail();
+    }
 }
