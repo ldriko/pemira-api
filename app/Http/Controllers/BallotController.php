@@ -156,7 +156,17 @@ class BallotController extends Controller
         return Ballot::query()
             ->with('user')
             ->where('event_id', $event->id)
-            ->where('id', $ballot->id - 1)
+            ->where('id', '<', $ballot->id)
+            ->orderBy('id', 'desc')
+            ->firstOrFail();
+    }
+
+    public function latestBallot(Event $event)
+    {
+        return Ballot::query()
+            ->with('user')
+            ->where('event_id', $event->id)
+            ->orderBy('id', 'desc')
             ->firstOrFail();
     }
 }
