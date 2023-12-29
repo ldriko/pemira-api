@@ -55,6 +55,7 @@ Route::prefix('events')->name('events.')->group(function () {
             Route::get('/count', [BallotController::class, 'count']);
             Route::get('/latest', [BallotController::class, 'latest']);
             Route::post('', [BallotController::class, 'store']);
+            Route::get('/{ballot}/previous', [BallotController::class, 'previous']);
             Route::get('/next', [BallotController::class, 'next']);
             Route::post('/{ballot}/accept', [BallotController::class, 'accept']);
             Route::post('/{ballot}/reject', [BallotController::class, 'reject']);
